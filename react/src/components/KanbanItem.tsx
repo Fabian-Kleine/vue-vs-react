@@ -3,6 +3,7 @@ import { Trash2 } from "lucide-react";
 
 type KanbanItemProps = Task & React.HTMLAttributes<HTMLDivElement> & {
     onDelete?: (id: string) => void;
+    ref: React.Ref<HTMLDivElement>;
 };
 
 
@@ -11,6 +12,8 @@ export default function KanbanItem({
     title,
     description,
     onDelete,
+    ref,
+    ...props
 }: KanbanItemProps) {
     const handleDelete = () => {
         if (onDelete) {
@@ -19,7 +22,7 @@ export default function KanbanItem({
     }
 
     return (
-        <div className="relative flex flex-col gap-2 m-2 p-2 rounded bg-gray-100 border border-neutral-300">
+        <div ref={ref} className="relative flex flex-col gap-2 m-2 p-2 rounded bg-gray-100 border border-neutral-300" {...props}>
             <button onClick={handleDelete} className="absolute cursor-pointer top-2 right-2 p-1 rounded hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300" title="Delete Task" aria-label="Delete task">
                 <Trash2 className="w-4 h-4 text-gray-600" />
             </button>
