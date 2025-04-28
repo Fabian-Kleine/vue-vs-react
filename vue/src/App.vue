@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import KanbanCol from './components/KanbanCol.vue'
+import KanbanInput from './components/KanbanInput.vue'
 </script>
 
 <template>
@@ -7,19 +8,19 @@ import KanbanCol from './components/KanbanCol.vue'
       <h1 className="text-4xl text-center font-bold">Kanban Board</h1>
       <div className="flex gap-4 mt-4">
         <KanbanCol title="Backlog">
-          <span>test</span>
+          <KanbanInput />
         </KanbanCol>
         <KanbanCol title="To Do">
-          <span>test</span>
+          <KanbanInput />
         </KanbanCol>
         <KanbanCol title="In Progress">
-          <span>test</span>
+          <KanbanInput />
         </KanbanCol>
         <KanbanCol title="Review">
-          <span>test</span>
+          <KanbanInput />
         </KanbanCol>
         <KanbanCol title="Done">
-          <span>test</span>
+          <KanbanInput />
         </KanbanCol>
       </div>
     </main>

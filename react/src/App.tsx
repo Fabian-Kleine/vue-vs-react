@@ -1,4 +1,5 @@
 import KanbanCol from "./components/KanbanCol"
+import KanbanInput from "./components/KanbanInput"
 
 function App() {
 
@@ -7,19 +8,19 @@ function App() {
       <h1 className="text-4xl text-center font-bold">Kanban Board</h1>
       <div className="flex gap-4 mt-4">
         <KanbanCol title="Backlog">
-          <span>test</span>
+          <KanbanInput />
         </KanbanCol>
         <KanbanCol title="To Do">
-          <span>test</span>
+          <KanbanInput />
         </KanbanCol>
         <KanbanCol title="In Progress">
-          <span>test</span>
+          <KanbanInput />
         </KanbanCol>
         <KanbanCol title="Review">
-          <span>test</span>
+          <KanbanInput />
         </KanbanCol>
         <KanbanCol title="Done">
-          <span>test</span>
+          <KanbanInput />
         </KanbanCol>
       </div>
     </main>
