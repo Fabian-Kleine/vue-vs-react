@@ -29,9 +29,9 @@ const handleDeleteTask = (id: string) => {
 </script>
 
 <template>
-  <main className="min-h-screen bg-gray-100 p-4 overflow-x-auto">
+  <main className="flex flex-col items-center min-h-screen bg-gray-100 p-4 overflow-x-auto">
     <h1 className="text-4xl text-center font-bold">Kanban Board (Vue)</h1>
-    <div className="flex gap-4 mt-4">
+    <div className="flex flex-1 gap-4 mt-4">
       <KanbanCol title="Backlog">
         <KanbanItem v-for="task in backlogTasks" :key="task.id" :task="task"
           @delete="handleDeleteTask" />
