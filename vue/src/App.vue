@@ -30,7 +30,7 @@ const handleDeleteTask = (id: string) => {
 
 <template>
   <main className="min-h-screen bg-gray-100 p-4 overflow-x-auto">
-    <h1 className="text-4xl text-center font-bold">Kanban Board</h1>
+    <h1 className="text-4xl text-center font-bold">Kanban Board (Vue)</h1>
     <div className="flex gap-4 mt-4">
       <KanbanCol title="Backlog">
         <KanbanItem v-for="task in backlogTasks" :key="task.id" :task="task"
