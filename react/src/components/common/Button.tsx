@@ -2,12 +2,14 @@ import { cn } from "../../lib/utils";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant: 'primary' | 'secondary' | 'destructive';
+    ref?: React.Ref<HTMLButtonElement>;
 }
 
 const Button: React.FC<ButtonProps> = ({
     className = '',
     children,
     variant = 'primary',
+    ref,
     ...props
 }) => {
     let variantClass = 'bg-blue-500 hover:bg-blue-600 ring-blue-400';
@@ -21,6 +23,7 @@ const Button: React.FC<ButtonProps> = ({
     return (
         <button
             className={cn('transition-all text-white px-4 py-2 rounded focus:ring-4 cursor-pointer', variantClass, className)}
+            ref={ref}
             {...props}
         >
             {children}

@@ -1,5 +1,5 @@
 import KanbanCol from "./components/KanbanCol"
-import KanbanInput from "./components/KanbanInput"
+import Button from "./components/common/Button"
 import { useState } from "react"
 import { Task } from "./types"
 import KanbanItem from "./components/KanbanItem"
@@ -9,23 +9,28 @@ import type { DropResult } from '@hello-pangea/dnd';
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  const handleAddTask = (status: Task['status'], title: string, description: string) => {
+  const handleAddTask = (status: Task['status']) => {
     const newTask: Task = {
       id: crypto.randomUUID(),
-      title,
-      description,
+      title: '',
+      description: '',
       status,
     }
-    setTasks([...tasks, newTask])
+    setTasks([...tasks, newTask]);
   }
 
   const handleDeleteTask = (id: string) => {
     setTasks(tasks.filter(task => task.id !== id))
   }
 
+  const handleUpdateTask = (updatedTask: Task) => {
+    console.log(updatedTask);
+    setTasks(tasks.map(task => task.id === updatedTask.id ? updatedTask : task));
+  }
+
   const handleDragEnd = (result: DropResult) => {
     const { destination, draggableId } = result;
-    
+
     // If there's no destination 
     if (!destination) {
       return;
@@ -37,7 +42,7 @@ function App() {
 
     // Get column id from droppableId
     const destinationColumnId = destination.droppableId;
-    
+
     // Set the new status based on destination column
     let newStatus: Task['status'];
     switch (destinationColumnId) {
@@ -61,7 +66,7 @@ function App() {
     }
 
     // Update the task with the new status
-    const updatedTasks = tasks.map(t => 
+    const updatedTasks = tasks.map(t =>
       t.id === task.id ? { ...t, status: newStatus } : t
     );
 
@@ -77,13 +82,15 @@ function App() {
             {tasks.filter(task => task.status === 'backlog').map((task, index) => (
               <Draggable key={task.id} draggableId={task.id} index={index}>
                 {(provided) => (
-                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} />
+                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} onUpdateTask={handleUpdateTask} />
                 )}
               </Draggable>
             ))}
             <Draggable key="add-task-backlog" isDragDisabled draggableId="add-task-backlog" index={tasks.length}>
               {(provided) => (
-                <KanbanInput ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onAddTask={({ title, description }) => handleAddTask('backlog', title, description)} />
+                <Button className="mt-4 w-full" variant="primary" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onClick={() => handleAddTask('backlog')}>
+                  Add Task
+                </Button>
               )}
             </Draggable>
           </KanbanCol>
@@ -91,13 +98,15 @@ function App() {
             {tasks.filter(task => task.status === 'todo').map((task, index) => (
               <Draggable key={task.id} draggableId={task.id} index={index}>
                 {(provided) => (
-                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} />
+                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} onUpdateTask={handleUpdateTask} />
                 )}
               </Draggable>
             ))}
             <Draggable key="add-task-todo" isDragDisabled draggableId="add-task-todo" index={tasks.length + 1}>
               {(provided) => (
-                <KanbanInput ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onAddTask={({ title, description }) => handleAddTask('todo', title, description)} />
+                <Button className="mt-4 w-full" variant="primary" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onClick={() => handleAddTask('todo')}>
+                  Add Task
+                </Button>
               )}
             </Draggable>
           </KanbanCol>
@@ -105,13 +114,15 @@ function App() {
             {tasks.filter(task => task.status === 'in-progress').map((task, index) => (
               <Draggable key={task.id} draggableId={task.id} index={index}>
                 {(provided) => (
-                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} />
+                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} onUpdateTask={handleUpdateTask} />
                 )}
               </Draggable>
             ))}
             <Draggable key="add-task-in-progress" isDragDisabled draggableId="add-task-in-progress" index={tasks.length + 2}>
               {(provided) => (
-                <KanbanInput ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onAddTask={({ title, description }) => handleAddTask('in-progress', title, description)} />
+                <Button className="mt-4 w-full" variant="primary" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onClick={() => handleAddTask('in-progress')}>
+                  Add Task
+                </Button>
               )}
             </Draggable>
           </KanbanCol>
@@ -119,13 +130,15 @@ function App() {
             {tasks.filter(task => task.status === 'review').map((task, index) => (
               <Draggable key={task.id} draggableId={task.id} index={index}>
                 {(provided) => (
-                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} />
+                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} onUpdateTask={handleUpdateTask} />
                 )}
               </Draggable>
             ))}
             <Draggable key="add-task-review" isDragDisabled draggableId="add-task-review" index={tasks.length + 3}>
               {(provided) => (
-                <KanbanInput ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onAddTask={({ title, description }) => handleAddTask('review', title, description)} />
+                <Button className="mt-4 w-full" variant="primary" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onClick={() => handleAddTask('review')}>
+                  Add Task
+                </Button>
               )}
             </Draggable>
           </KanbanCol>
@@ -133,13 +146,15 @@ function App() {
             {tasks.filter(task => task.status === 'done').map((task, index) => (
               <Draggable key={task.id} draggableId={task.id} index={index}>
                 {(provided) => (
-                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} />
+                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} onUpdateTask={handleUpdateTask} />
                 )}
               </Draggable>
             ))}
             <Draggable key="add-task-done" isDragDisabled draggableId="add-task-done" index={tasks.length + 4}>
               {(provided) => (
-                <KanbanInput ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onAddTask={({ title, description }) => handleAddTask('done', title, description)} />
+                <Button className="mt-4 w-full" variant="primary" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onClick={() => handleAddTask('done')}>
+                  Add Task
+                </Button>
               )}
             </Draggable>
           </KanbanCol>
