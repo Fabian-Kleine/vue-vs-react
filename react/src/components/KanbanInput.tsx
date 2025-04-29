@@ -1,7 +1,7 @@
 import Button from "./common/Button"
 import Input from "./common/Input"
 import Textarea from "./common/Textarea"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 interface KanbanInputProps extends React.HTMLAttributes<HTMLDivElement> {
     onAddTask: (task: { title: string; description: string }) => void;
@@ -9,8 +9,8 @@ interface KanbanInputProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export default function KanbanInput({ onAddTask, defaultValues, ...props }: KanbanInputProps) {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
+    const [title, setTitle] = useState(defaultValues?.title || "");
+    const [description, setDescription] = useState(defaultValues?.description || "");
 
     const handleAddTask = () => {
         if (title) {
@@ -19,13 +19,6 @@ export default function KanbanInput({ onAddTask, defaultValues, ...props }: Kanb
             setDescription("");
         }
     }
-
-    useEffect(() => {
-        if (defaultValues) {
-            setTitle(defaultValues.title);
-            setDescription(defaultValues.description);
-        }
-    }, [defaultValues]);
 
     return (
         <div className="flex flex-col gap-2 my-2 p-2 rounded bg-gray-100 border border-neutral-300" {...props}>
