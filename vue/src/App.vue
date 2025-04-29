@@ -2,20 +2,29 @@
 import KanbanCol from './components/KanbanCol.vue'
 import KanbanItem from './components/KanbanItem.vue'
 import Button from './components/common/Button.vue'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import type { Task } from './types'
+import { Plus } from 'lucide-vue-next'
 
 const tasks = ref<Task[]>([]);
 
-const backlogTasks = computed(() => tasks.value.filter(task => task.status === 'backlog'));
-const todoTasks = computed(() => tasks.value.filter(task => task.status === 'todo'));
-const inProgressTasks = computed(() => tasks.value.filter(task => task.status === 'in-progress'));
-const reviewTasks = computed(() => tasks.value.filter(task => task.status === 'review'));
-const doneTasks = computed(() => tasks.value.filter(task => task.status === 'done'));
+// Define columns configuration
+const columns: { title: string; status: Task['status'] }[] = [
+  { title: 'Backlog', status: 'backlog' },
+  { title: 'To Do', status: 'todo' },
+  { title: 'In Progress', status: 'in-progress' },
+  { title: 'Review', status: 'review' },
+  { title: 'Done', status: 'done' },
+];
+
+// Function to filter tasks by status
+const getTasksByStatus = (status: Task['status']) => {
+  return tasks.value.filter(task => task.status === status);
+};
 
 const handleAddTask = (status: Task["status"]) => {
-  const newTask = {
-    id: (tasks.value.length + 1).toString(),
+  const newTask: Task = {
+    id: crypto.randomUUID(),
     title: '',
     description: '',
     status
@@ -39,34 +48,14 @@ const handleUpdateTask = (updatedTask: Task) => {
   <main className="flex flex-col items-center min-h-screen bg-gray-100 p-4 overflow-hidden">
     <h1 className="text-4xl text-center font-bold">Kanban Board (Vue)</h1>
     <div className="flex gap-4 mt-4 flex-1 overflow-x-auto w-full max-w-full px-2">
-      <KanbanCol title="Backlog">
-        <KanbanItem v-for="task in backlogTasks" :key="task.id" :task="task" @delete="handleDeleteTask" @update="handleUpdateTask" />
-        <Button class="w-full mt-2" variant="primary" @click="handleAddTask('backlog')">
-          Add Task
-        </Button>
-      </KanbanCol>
-      <KanbanCol title="To Do">
-        <KanbanItem v-for="task in todoTasks" :key="task.id" :task="task" @delete="handleDeleteTask" @update="handleUpdateTask" />
-        <Button class="w-full mt-2" variant="primary" @click="handleAddTask('todo')">
-          Add Task
-        </Button>
-      </KanbanCol>
-      <KanbanCol title="In Progress">
-        <KanbanItem v-for="task in inProgressTasks" :key="task.id" :task="task" @delete="handleDeleteTask" @update="handleUpdateTask" />
-        <Button class="w-full mt-2" variant="primary" @click="handleAddTask('in-progress')">
-          Add Task
-        </Button>
-      </KanbanCol>
-      <KanbanCol title="Review">
-        <KanbanItem v-for="task in reviewTasks" :key="task.id" :task="task" @delete="handleDeleteTask" @update="handleUpdateTask" />
-        <Button class="w-full mt-2" variant="primary" @click="handleAddTask('review')">
-          Add Task
-        </Button>
-      </KanbanCol>
-      <KanbanCol title="Done">
-        <KanbanItem v-for="task in doneTasks" :key="task.id" :task="task" @delete="handleDeleteTask" @update="handleUpdateTask" />
-        <Button class="w-full mt-2" variant="primary" @click="handleAddTask('done')">
-          Add Task
+      <!-- Iterate over columns -->
+      <KanbanCol v-for="column in columns" :key="column.status" :title="column.title">
+        <!-- Pass filtered tasks to KanbanItem loop -->
+        <KanbanItem v-for="task in getTasksByStatus(column.status)" :key="task.id" :task="task" @delete="handleDeleteTask" @update="handleUpdateTask" />
+        <!-- Dynamically set status for adding tasks -->
+        <Button class="w-full mt-2" variant="primary" @click="handleAddTask(column.status)">
+          <Plus class="mx-auto" />
+          <span class="sr-only">Add Task</span>
         </Button>
       </KanbanCol>
     </div>

@@ -5,6 +5,15 @@ import { Task } from "./types"
 import KanbanItem from "./components/KanbanItem"
 import { DragDropContext, Draggable } from '@hello-pangea/dnd';
 import type { DropResult } from '@hello-pangea/dnd';
+import { Plus } from "lucide-react"
+
+const columns: { title: string; status: Task['status'] }[] = [
+  { title: 'Backlog', status: 'backlog' },
+  { title: 'To Do', status: 'todo' },
+  { title: 'In Progress', status: 'in-progress' },
+  { title: 'Review', status: 'review' },
+  { title: 'Done', status: 'done' },
+];
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -45,26 +54,8 @@ function App() {
     const filteredTasks = updatedTasks.filter(t => t.id !== draggableId);
 
     if (destination.droppableId !== source.droppableId) {
-      let newStatus: Task['status'];
-      switch (destination.droppableId) {
-        case 'Backlog':
-          newStatus = 'backlog';
-          break;
-        case 'To Do':
-          newStatus = 'todo';
-          break;
-        case 'In Progress':
-          newStatus = 'in-progress';
-          break;
-        case 'Review':
-          newStatus = 'review';
-          break;
-        case 'Done':
-          newStatus = 'done';
-          break;
-        default:
-          return;
-      }
+      const newStatus = columns.find(col => col.title === destination.droppableId)?.status;
+      if (!newStatus) return;
 
       const updatedTask = { ...task, status: newStatus };
 
@@ -97,86 +88,28 @@ function App() {
       <h1 className="text-4xl text-center font-bold">Kanban Board (React)</h1>
       <div className="flex gap-4 mt-4 flex-1 overflow-x-auto w-full max-w-full px-2">
         <DragDropContext onDragEnd={handleDragEnd}>
-          <KanbanCol title="Backlog">
-            {tasks.filter(task => task.status === 'backlog').map((task, index) => (
-              <Draggable key={task.id} draggableId={task.id} index={index}>
-                {(provided) => (
-                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} onUpdateTask={handleUpdateTask} />
-                )}
-              </Draggable>
-            ))}
-            <Draggable key="add-task-backlog" isDragDisabled draggableId="add-task-backlog" index={tasks.length}>
-              {(provided) => (
-                <Button className="mt-4 w-full" variant="primary" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onClick={() => handleAddTask('backlog')}>
-                  Add Task
-                </Button>
-              )}
-            </Draggable>
-          </KanbanCol>
-          <KanbanCol title="To Do">
-            {tasks.filter(task => task.status === 'todo').map((task, index) => (
-              <Draggable key={task.id} draggableId={task.id} index={index}>
-                {(provided) => (
-                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} onUpdateTask={handleUpdateTask} />
-                )}
-              </Draggable>
-            ))}
-            <Draggable key="add-task-todo" isDragDisabled draggableId="add-task-todo" index={tasks.length + 1}>
-              {(provided) => (
-                <Button className="mt-4 w-full" variant="primary" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onClick={() => handleAddTask('todo')}>
-                  Add Task
-                </Button>
-              )}
-            </Draggable>
-          </KanbanCol>
-          <KanbanCol title="In Progress">
-            {tasks.filter(task => task.status === 'in-progress').map((task, index) => (
-              <Draggable key={task.id} draggableId={task.id} index={index}>
-                {(provided) => (
-                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} onUpdateTask={handleUpdateTask} />
-                )}
-              </Draggable>
-            ))}
-            <Draggable key="add-task-in-progress" isDragDisabled draggableId="add-task-in-progress" index={tasks.length + 2}>
-              {(provided) => (
-                <Button className="mt-4 w-full" variant="primary" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onClick={() => handleAddTask('in-progress')}>
-                  Add Task
-                </Button>
-              )}
-            </Draggable>
-          </KanbanCol>
-          <KanbanCol title="Review">
-            {tasks.filter(task => task.status === 'review').map((task, index) => (
-              <Draggable key={task.id} draggableId={task.id} index={index}>
-                {(provided) => (
-                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} onUpdateTask={handleUpdateTask} />
-                )}
-              </Draggable>
-            ))}
-            <Draggable key="add-task-review" isDragDisabled draggableId="add-task-review" index={tasks.length + 3}>
-              {(provided) => (
-                <Button className="mt-4 w-full" variant="primary" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onClick={() => handleAddTask('review')}>
-                  Add Task
-                </Button>
-              )}
-            </Draggable>
-          </KanbanCol>
-          <KanbanCol title="Done">
-            {tasks.filter(task => task.status === 'done').map((task, index) => (
-              <Draggable key={task.id} draggableId={task.id} index={index}>
-                {(provided) => (
-                  <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} onUpdateTask={handleUpdateTask} />
-                )}
-              </Draggable>
-            ))}
-            <Draggable key="add-task-done" isDragDisabled draggableId="add-task-done" index={tasks.length + 4}>
-              {(provided) => (
-                <Button className="mt-4 w-full" variant="primary" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} onClick={() => handleAddTask('done')}>
-                  Add Task
-                </Button>
-              )}
-            </Draggable>
-          </KanbanCol>
+          {columns.map((column, colIndex) => {
+            const columnTasks = tasks.filter(task => task.status === column.status);
+            return (
+              <KanbanCol key={colIndex} title={column.title}>
+                {columnTasks.map((task, index) => (
+                  <Draggable key={task.id} draggableId={task.id} index={index}>
+                    {(provided) => (
+                      <KanbanItem ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} {...task} onDelete={handleDeleteTask} onUpdateTask={handleUpdateTask} />
+                    )}
+                  </Draggable>
+                ))}
+                <Draggable key={`add-${column.status}`} isDragDisabled draggableId={`add-${column.status}`} index={columnTasks.length}>
+                  {(provided) => (
+                    <Button ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="mt-4 w-full" variant="primary" onClick={() => handleAddTask(column.status)}>
+                      <Plus className="mx-auto" />
+                      <span className="sr-only">Add Task</span>
+                    </Button>
+                  )}
+                </Draggable>
+              </KanbanCol>
+            );
+          })}
         </DragDropContext>
       </div>
     </main>
