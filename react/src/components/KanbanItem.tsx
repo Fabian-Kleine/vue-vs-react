@@ -28,6 +28,14 @@ export default function KanbanItem({
         }
     }
 
+    const handleCancel = () => {
+        if (title == "") {
+            handleDelete();
+            return;
+        }
+        setIsEditing(false);
+    }
+
     const handleUpdateTask = (title: string, description: string) => {
         setIsEditing(false);
         if (onUpdateTask) {
@@ -49,7 +57,7 @@ export default function KanbanItem({
 
     if (isEditing) {
         return (
-            <KanbanInput ref={ref} defaultValues={{ title, description }} onAddTask={({ title, description }) => handleUpdateTask(title, description)} />
+            <KanbanInput ref={ref} defaultValues={{ title, description }} onCancel={handleCancel} onAddTask={({ title, description }) => handleUpdateTask(title, description)} />
         )
     }
 

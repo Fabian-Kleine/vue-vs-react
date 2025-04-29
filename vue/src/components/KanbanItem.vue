@@ -18,7 +18,7 @@
         </div>
     </template>
     <template v-else>
-        <KanbanInput :default-values="{ title: task.title, description: task.description }" @add="handleUpdateTask" />
+        <KanbanInput :default-values="{ title: task.title, description: task.description }" @add="handleUpdateTask" @cancel="handleCancel" />
     </template>
 </template>
 
@@ -41,6 +41,14 @@ const handleDelete = () => {
 
 const handleEdit = () => {
     isEditing.value = true;
+};
+
+const handleCancel = () => {
+    if (props.task.title == '') {
+        emit('delete', props.task.id.toString());
+        return;
+    }
+    isEditing.value = false;
 };
 
 const handleUpdateTask = ({ title, description }: { title: string, description: string }) => {

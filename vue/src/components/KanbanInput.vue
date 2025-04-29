@@ -2,7 +2,10 @@
     <div class="flex flex-col gap-2 my-2 p-2 rounded bg-gray-100 border border-neutral-300">
         <Input class="font-bold" v-model="title" type="text" placeholder="Task Title" />
         <Textarea v-model="description" placeholder="Task Description" />
-        <Button @click="handleAddTask" variant="primary">Save</Button>
+        <div class="flex justify-center gap-2">
+            <Button class="flex-1" @click="handleCancel" variant="secondary">Cancel</Button>
+            <Button class="flex-1" @click="handleAddTask" variant="primary">Save</Button>
+        </div>
     </div>
 </template>
 
@@ -21,6 +24,7 @@ const description = ref(props.defaultValues?.description || '');
 
 const emit = defineEmits<{
     (e: 'add', task: { title: string; description: string }): void;
+    (e: 'cancel'): void;
 }>();
 
 const handleAddTask = () => {
@@ -29,5 +33,9 @@ const handleAddTask = () => {
         title.value = '';
         description.value = '';
     }
+};
+
+const handleCancel = () => {
+    emit('cancel');
 };
 </script>
