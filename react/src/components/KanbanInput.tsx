@@ -23,7 +23,7 @@ export default function KanbanInput({ onAddTask, defaultValues, ref, ...props }:
 
     return (
         <div ref={ref} className="flex flex-col gap-2 my-2 p-2 rounded bg-gray-100 border border-neutral-300" {...props}>
-            <Input value={title} onChange={e => setTitle(e.target.value)} type="text" placeholder="Task Title" />
+            <Input className="font-bold" value={title} onChange={e => setTitle(e.target.value)} type="text" placeholder="Task Title" />
             <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Task Description" />
             <Button variant="primary" onClick={handleAddTask}>Save</Button>
         </div>

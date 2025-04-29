@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col gap-2 my-2 p-2 rounded bg-gray-100 border border-neutral-300">
-        <Input v-model="title" type="text" placeholder="Task Title" />
+        <Input class="font-bold" v-model="title" type="text" placeholder="Task Title" />
         <Textarea v-model="description" placeholder="Task Description" />
         <Button @click="handleAddTask" variant="primary">Save</Button>
     </div>
