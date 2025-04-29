@@ -84,9 +84,9 @@ function App() {
   };
 
   return (
-    <main className="flex flex-col items-center min-h-screen bg-gray-100 p-4 overflow-hidden">
+    <main className="flex flex-col items-center min-h-screen bg-gray-100 p-4 w-fit min-w-screen">
       <h1 className="text-4xl text-center font-bold">Kanban Board (React)</h1>
-      <div className="flex gap-4 mt-4 flex-1 overflow-x-auto w-full max-w-full px-2">
+      <div className="flex gap-4 mt-4 flex-1 w-full px-2">
         <DragDropContext onDragEnd={handleDragEnd}>
           {columns.map((column, colIndex) => {
             const columnTasks = tasks.filter(task => task.status === column.status);
