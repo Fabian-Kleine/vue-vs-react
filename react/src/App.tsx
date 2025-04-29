@@ -29,48 +29,67 @@ function App() {
   }
 
   const handleDragEnd = (result: DropResult) => {
-    const { destination, draggableId } = result;
+    const { destination, source, draggableId } = result;
 
-    // If there's no destination 
-    if (!destination) {
+    if (!destination ||
+      (destination.droppableId === source.droppableId &&
+        destination.index === source.index)) {
       return;
     }
 
-    // Find the task that was dragged
     const task = tasks.find(task => task.id === draggableId);
     if (!task) return;
 
-    // Get column id from droppableId
-    const destinationColumnId = destination.droppableId;
+    const updatedTasks = [...tasks];
 
-    // Set the new status based on destination column
-    let newStatus: Task['status'];
-    switch (destinationColumnId) {
-      case 'Backlog':
-        newStatus = 'backlog';
-        break;
-      case 'To Do':
-        newStatus = 'todo';
-        break;
-      case 'In Progress':
-        newStatus = 'in-progress';
-        break;
-      case 'Review':
-        newStatus = 'review';
-        break;
-      case 'Done':
-        newStatus = 'done';
-        break;
-      default:
-        return; // Invalid destination
+    const filteredTasks = updatedTasks.filter(t => t.id !== draggableId);
+
+    if (destination.droppableId !== source.droppableId) {
+      let newStatus: Task['status'];
+      switch (destination.droppableId) {
+        case 'Backlog':
+          newStatus = 'backlog';
+          break;
+        case 'To Do':
+          newStatus = 'todo';
+          break;
+        case 'In Progress':
+          newStatus = 'in-progress';
+          break;
+        case 'Review':
+          newStatus = 'review';
+          break;
+        case 'Done':
+          newStatus = 'done';
+          break;
+        default:
+          return;
+      }
+
+      const updatedTask = { ...task, status: newStatus };
+
+      const tasksInDestination = filteredTasks.filter(t => t.status === newStatus);
+      const tasksBeforeIndex = tasksInDestination.slice(0, destination.index);
+      const tasksAfterIndex = tasksInDestination.slice(destination.index);
+
+      setTasks([
+        ...filteredTasks.filter(t => t.status !== newStatus),
+        ...tasksBeforeIndex,
+        updatedTask,
+        ...tasksAfterIndex
+      ]);
     }
 
-    // Update the task with the new status
-    const updatedTasks = tasks.map(t =>
-      t.id === task.id ? { ...t, status: newStatus } : t
-    );
+    else {
+      const sameStatusTasks = filteredTasks.filter(t => t.status === task.status);
 
-    setTasks(updatedTasks);
+      sameStatusTasks.splice(destination.index, 0, task);
+
+      setTasks([
+        ...filteredTasks.filter(t => t.status !== task.status),
+        ...sameStatusTasks
+      ]);
+    }
   };
 
   return (
