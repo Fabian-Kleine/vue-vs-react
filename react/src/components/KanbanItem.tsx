@@ -49,7 +49,7 @@ export default function KanbanItem({
 
     if (isEditing) {
         return (
-            <KanbanInput defaultValues={{ title, description }} onAddTask={({ title, description }) => handleUpdateTask(title, description)} />
+            <KanbanInput ref={ref} defaultValues={{ title, description }} onAddTask={({ title, description }) => handleUpdateTask(title, description)} />
         )
     }
 

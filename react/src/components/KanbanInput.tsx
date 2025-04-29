@@ -5,10 +5,11 @@ import { useState } from "react"
 
 interface KanbanInputProps extends React.HTMLAttributes<HTMLDivElement> {
     onAddTask: (task: { title: string; description: string }) => void;
+    ref?: React.Ref<HTMLDivElement>;
     defaultValues?: { title: string; description: string };
 }
 
-export default function KanbanInput({ onAddTask, defaultValues, ...props }: KanbanInputProps) {
+export default function KanbanInput({ onAddTask, defaultValues, ref, ...props }: KanbanInputProps) {
     const [title, setTitle] = useState(defaultValues?.title || "");
     const [description, setDescription] = useState(defaultValues?.description || "");
 
@@ -21,7 +22,7 @@ export default function KanbanInput({ onAddTask, defaultValues, ...props }: Kanb
     }
 
     return (
-        <div className="flex flex-col gap-2 my-2 p-2 rounded bg-gray-100 border border-neutral-300" {...props}>
+        <div ref={ref} className="flex flex-col gap-2 my-2 p-2 rounded bg-gray-100 border border-neutral-300" {...props}>
             <Input value={title} onChange={e => setTitle(e.target.value)} type="text" placeholder="Task Title" />
             <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Task Description" />
             <Button variant="primary" onClick={handleAddTask}>Save</Button>
