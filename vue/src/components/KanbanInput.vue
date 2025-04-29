@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-2 m-2 p-2 rounded bg-gray-100 border border-neutral-300">
         <Input v-model="title" type="text" placeholder="Task Title" />
         <Textarea v-model="description" placeholder="Task Description" />
-        <Button @click="handleAddTask" variant="primary">Add Task</Button>
+        <Button @click="handleAddTask" variant="primary">Save</Button>
     </div>
 </template>
 
@@ -12,8 +12,12 @@ import Input from './common/Input.vue'
 import Textarea from './common/Textarea.vue'
 import { ref } from 'vue'
 
-const title = ref('')
-const description = ref('')
+const props = defineProps<{
+    defaultValues?: { title: string; description: string };
+}>();
+
+const title = ref(props.defaultValues?.title || '');
+const description = ref(props.defaultValues?.description || '');
 
 const emit = defineEmits<{
     (e: 'add', task: { title: string; description: string }): void;
