@@ -71,8 +71,8 @@ export default function KanbanItem({
                     <Trash2 className="w-4 h-4 text-gray-600" />
                 </button>
             </div>
-            <h3 className="text-lg font-semibold">{title}</h3>
-            <p className="text-gray-600">{description}</p>
+            <h3 className="text-lg font-semibold break-words max-w-[80%]">{title}</h3>
+            <p className="text-gray-600 break-words max-w-[80%]">{description}</p>
         </div>
     )
 }

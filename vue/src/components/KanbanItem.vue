@@ -13,8 +13,8 @@
                     <Trash2 class="w-4 h-4 text-gray-600" />
                 </button>
             </div>
-            <h3 class="text-lg font-semibold">{{ task.title }}</h3>
-            <p class="text-gray-600">{{ task.description }}</p>
+            <h3 class="text-lg font-semibold break-words max-w-[80%]">{{ task.title }}</h3>
+            <p class="text-gray-600 break-words max-w-[80%]">{{ task.description }}</p>
         </div>
     </template>
     <template v-else>
