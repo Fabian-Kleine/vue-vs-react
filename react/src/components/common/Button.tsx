@@ -22,7 +22,7 @@ const Button: React.FC<ButtonProps> = ({
 
     return (
         <button
-            className={cn('transition-all text-white px-4 py-2 rounded focus:ring-4 cursor-pointer', variantClass, className)}
+            className={cn('transition-colors text-white px-4 py-2 rounded focus:ring-4 cursor-pointer', variantClass, className)}
             ref={ref}
             {...props}
         >

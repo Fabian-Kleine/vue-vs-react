@@ -1,6 +1,6 @@
 <template>
     <button
-        :class="cn('transition-all text-white px-4 py-2 rounded focus:ring-4 cursor-pointer', variantClass)"
+        :class="cn('transition-colors text-white px-4 py-2 rounded focus:ring-4 cursor-pointer', variantClass)"
     >
         <slot></slot>
     </button>
