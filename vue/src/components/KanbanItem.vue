@@ -12,15 +12,15 @@
 
 <script setup lang="ts">
 import { Trash2 } from 'lucide-vue-next'
-import { Task } from '../types'
+import type { Task } from '../types'
 
 const props = defineProps<{ task: Task }>();
 
 const emit = defineEmits<{
-    (e: 'delete', id: number): void;
+    (e: 'delete', id: string): void;
 }>();
 
 const handleDelete = () => {
-    emit('delete', props.task.id);
+    emit('delete', props.task.id.toString());
 };
 </script>
