@@ -26,7 +26,7 @@ import Button from './components/common/Button.vue'
 import { useStorage } from './lib/useStorage'
 import type { Task } from './types'
 import { Plus } from 'lucide-vue-next'
-import VisitReact from './components/VisitReact.vue'
+import VisitReact from './components/ExternalLinks.vue'
 
 const tasks = useStorage<Task[]>('tasks_vue', []);
 

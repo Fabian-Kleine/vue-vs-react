@@ -6,7 +6,7 @@ import { DragDropContext, Draggable } from '@hello-pangea/dnd';
 import type { DropResult } from '@hello-pangea/dnd';
 import { Plus } from "lucide-react"
 import useStorage from "./lib/useStorage"
-import VisitVue from "./components/VisitVue";
+import ExternalLinks from "./components/ExternalLinks";
 
 const columns: { title: string; status: Task['status'] }[] = [
   { title: 'Backlog', status: 'backlog' },
@@ -113,7 +113,7 @@ function App() {
           })}
         </DragDropContext>
       </div>
-      <VisitVue />
+      <ExternalLinks />
     </main>
   )
 }
