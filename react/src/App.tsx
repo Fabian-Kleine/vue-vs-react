@@ -1,11 +1,11 @@
 import KanbanCol from "./components/KanbanCol"
 import Button from "./components/common/Button"
-import { useState } from "react"
 import { Task } from "./types"
 import KanbanItem from "./components/KanbanItem"
 import { DragDropContext, Draggable } from '@hello-pangea/dnd';
 import type { DropResult } from '@hello-pangea/dnd';
 import { Plus } from "lucide-react"
+import useStorage from "./lib/useStorage"
 
 const columns: { title: string; status: Task['status'] }[] = [
   { title: 'Backlog', status: 'backlog' },
@@ -16,7 +16,7 @@ const columns: { title: string; status: Task['status'] }[] = [
 ];
 
 function App() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useStorage<Task[]>('tasks', []);
 
   const handleAddTask = (status: Task['status']) => {
     const newTask: Task = {
