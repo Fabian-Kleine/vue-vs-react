@@ -1,7 +1,7 @@
 <template>
     <template v-if="!isEditing">
         <div class="relative flex flex-col gap-2 my-2 p-2 rounded bg-gray-100 border border-neutral-300">
-            <div className="absolute top-2 right-2 flex gap-1">
+            <div class="absolute top-2 right-2 flex gap-1">
                 <button @click="handleEdit"
                     class="cursor-pointer p-1 rounded hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
                     title="Delete Task" aria-label="Delete task">
