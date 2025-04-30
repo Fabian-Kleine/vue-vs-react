@@ -1,6 +1,13 @@
 <template>
     <template v-if="!isEditing">
-        <div class="relative flex flex-col gap-2 my-2 p-2 rounded bg-gray-100 border border-neutral-300">
+        <div
+            class="relative flex flex-col gap-2 my-2 p-2 rounded bg-gray-100 border border-neutral-300 cursor-grab"
+            draggable="true"
+            :data-id="task.id.toString()"
+            @dragover.prevent
+            @dragenter.prevent
+            @drop="handleDropOnItem"
+        >
             <div class="absolute top-2 right-2 flex gap-1">
                 <button @click="handleEdit"
                     class="cursor-pointer p-1 rounded hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
@@ -33,6 +40,7 @@ const props = defineProps<{ task: Task }>();
 const emit = defineEmits<{
     (e: 'delete', id: string): void;
     (e: 'update', task: Task): void;
+    (e: 'reorder', { draggedId, targetId }: { draggedId: string, targetId: string }): void;
 }>();
 
 const handleDelete = () => {
@@ -55,6 +63,17 @@ const handleUpdateTask = ({ title, description }: { title: string, description: 
     const task = { ...props.task, title, description };
     emit('update', task);
     isEditing.value = false;
+};
+
+const handleDropOnItem = (event: DragEvent) => {
+    event.stopPropagation();
+    if (event.dataTransfer) {
+        const draggedId = event.dataTransfer.getData('text/plain');
+        const targetId = props.task.id;
+        if (draggedId && targetId && draggedId !== targetId) {
+            emit('reorder', { draggedId, targetId });
+        }
+    }
 };
 
 const isEditing = ref(false);
