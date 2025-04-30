@@ -6,7 +6,8 @@
       <KanbanCol v-for="column in columns" :key="column.status" :title="column.title" @drop="drop($event, column.status)">
         <!-- Pass filtered tasks to KanbanItem loop -->
         <KanbanItem v-for="task in getTasksByStatus(column.status)" :key="task.id" :task="task"
-          @delete="handleDeleteTask" @update="handleUpdateTask" @dragstart="drag($event, task)" @reorder="handleReorderTask" />
+          @delete="handleDeleteTask" @update="handleUpdateTask" @dragstart="drag($event, task)" @reorder="handleReorderTask"
+          @changeStatusAndReorder="handleChangeStatusAndReorder" />
         <!-- Dynamically set status for adding tasks -->
         <Button class="w-full mt-2" variant="primary" @click="handleAddTask(column.status)">
           <Plus class="mx-auto" />
@@ -67,7 +68,7 @@ const handleReorderTask = ({ draggedId, targetId }: { draggedId: string, targetI
   const originalTargetIndex = tasks.value.findIndex(task => task.id === targetId);
 
   if (originalDraggedIndex === -1 || originalTargetIndex === -1) {
-    console.error("Dragged or target task not found");
+    console.error("Reorder: Dragged or target task not found");
     return;
   }
 
@@ -75,45 +76,74 @@ const handleReorderTask = ({ draggedId, targetId }: { draggedId: string, targetI
   const targetTask = tasks.value[originalTargetIndex];
 
   if (draggedTask.status !== targetTask.status) {
-    console.warn("Cannot reorder tasks between different columns via item drop.");
+    console.warn("handleReorderTask called for tasks in different columns. This should be handled by changeStatusAndReorder.");
     return;
   }
 
   tasks.value.splice(originalDraggedIndex, 1);
 
-  const newTargetIndex = tasks.value.findIndex(task => task.id === targetId);
-
-  let insertIndex;
-  if (originalDraggedIndex < originalTargetIndex) {
-    insertIndex = newTargetIndex + 1;
-  } else {
-    insertIndex = newTargetIndex;
+  const finalTargetIndex = tasks.value.findIndex(task => task.id === targetId);
+  if (finalTargetIndex === -1) {
+    console.error("Reorder: Target task disappeared after splice?");
+    tasks.value.push(draggedTask);
+    return;
   }
 
-  tasks.value.splice(insertIndex, 0, draggedTask);
+  if (originalDraggedIndex > originalTargetIndex) {
+    tasks.value.splice(finalTargetIndex , 0, draggedTask);
+    return;
+  }
+
+  tasks.value.splice(finalTargetIndex + 1, 0, draggedTask);
+};
+
+const handleChangeStatusAndReorder = ({ draggedId, targetId, newStatus }: { draggedId: string, targetId: string, newStatus: Task['status'] }) => {
+  const draggedIndex = tasks.value.findIndex(task => task.id === draggedId);
+  const targetIndex = tasks.value.findIndex(task => task.id === targetId);
+
+  if (draggedIndex === -1 || targetIndex === -1) {
+    console.error("ChangeStatus: Dragged or target task not found");
+    return;
+  }
+
+  const draggedTask = tasks.value[draggedIndex];
+
+  draggedTask.status = newStatus;
+
+  tasks.value.splice(draggedIndex, 1);
+
+  const finalTargetIndex = tasks.value.findIndex(task => task.id === targetId);
+  if (finalTargetIndex === -1) {
+    console.error("ChangeStatus: Target task disappeared after splice?");
+    tasks.value.push(draggedTask);
+    return;
+  }
+
+  tasks.value.splice(finalTargetIndex + 1, 0, draggedTask);
 };
 
 const drag = (event: DragEvent, task: Task) => {
   if (event.dataTransfer) {
     event.dataTransfer.dropEffect = 'move';
     event.dataTransfer.effectAllowed = 'move';
-    event.dataTransfer.setData('text/plain', task.id);
+    event.dataTransfer.setData('text/plain', JSON.stringify({ id: task.id, status: task.status }));
   }
 };
 
 const drop = (event: DragEvent, status: Task['status']) => {
   if (event.dataTransfer) {
-    const taskId = event.dataTransfer.getData('text/plain');
+    const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+    const taskId = data.id;
     const task = tasks.value.find(task => task.id === taskId);
 
-    if (task && task.status !== status) { // Only update if status changes
-      task.status = status;
-      // Find the original index and remove the task
+    if (task && task.status !== status) {
       const originalIndex = tasks.value.findIndex(t => t.id === taskId);
+
+      task.status = status;
+
       if (originalIndex !== -1) {
         tasks.value.splice(originalIndex, 1);
       }
-      // Add the task to the end of the new column (or handle specific positioning if needed)
       tasks.value.push(task);
     }
   }

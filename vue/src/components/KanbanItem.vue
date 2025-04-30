@@ -41,6 +41,7 @@ const emit = defineEmits<{
     (e: 'delete', id: string): void;
     (e: 'update', task: Task): void;
     (e: 'reorder', { draggedId, targetId }: { draggedId: string, targetId: string }): void;
+    (e: 'changeStatusAndReorder', { draggedId, targetId, newStatus }: { draggedId: string, targetId: string, newStatus: Task['status'] }): void;
 }>();
 
 const handleDelete = () => {
@@ -66,12 +67,22 @@ const handleUpdateTask = ({ title, description }: { title: string, description: 
 };
 
 const handleDropOnItem = (event: DragEvent) => {
-    event.stopPropagation();
+    event.stopPropagation(); // Always stop propagation now
     if (event.dataTransfer) {
-        const draggedId = event.dataTransfer.getData('text/plain');
+        const data = JSON.parse(event.dataTransfer.getData('text/plain'));
+        const draggedId = data.id;
+        const draggedStatus = data.status;
         const targetId = props.task.id;
+        const targetStatus = props.task.status;
+
         if (draggedId && targetId && draggedId !== targetId) {
-            emit('reorder', { draggedId, targetId });
+            if (draggedStatus === targetStatus) {
+                // Same column: Emit reorder
+                emit('reorder', { draggedId, targetId });
+            } else {
+                // Different column: Emit status change and reorder relative to target
+                emit('changeStatusAndReorder', { draggedId, targetId, newStatus: targetStatus });
+            }
         }
     }
 };
