@@ -22,11 +22,11 @@
 import KanbanCol from './components/KanbanCol.vue'
 import KanbanItem from './components/KanbanItem.vue'
 import Button from './components/common/Button.vue'
-import { ref } from 'vue'
+import { useStorage } from './lib/useStorage'
 import type { Task } from './types'
 import { Plus } from 'lucide-vue-next'
 
-const tasks = ref<Task[]>([]);
+const tasks = useStorage<Task[]>('tasks_vue', []);
 
 // Define columns configuration
 const columns: { title: string; status: Task['status'] }[] = [

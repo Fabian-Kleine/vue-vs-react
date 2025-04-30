@@ -16,7 +16,7 @@ const columns: { title: string; status: Task['status'] }[] = [
 ];
 
 function App() {
-  const [tasks, setTasks] = useStorage<Task[]>('tasks', []);
+  const [tasks, setTasks] = useStorage<Task[]>('tasks_react', []);
 
   const handleAddTask = (status: Task['status']) => {
     const newTask: Task = {
