@@ -9,3 +9,4 @@
 ## Cons
 - defineProps and emitProps
 - fallthrough attrs can get confusing
+- didnt find a package like `react-beautiful-dnd` for vue. made dnd from scratch
