@@ -6,6 +6,7 @@ import { DragDropContext, Draggable } from '@hello-pangea/dnd';
 import type { DropResult } from '@hello-pangea/dnd';
 import { Plus } from "lucide-react"
 import useStorage from "./lib/useStorage"
+import VisitVue from "./components/VisitVue";
 
 const columns: { title: string; status: Task['status'] }[] = [
   { title: 'Backlog', status: 'backlog' },
@@ -112,6 +113,7 @@ function App() {
           })}
         </DragDropContext>
       </div>
+      <VisitVue />
     </main>
   )
 }
